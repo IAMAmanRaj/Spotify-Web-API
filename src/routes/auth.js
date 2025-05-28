@@ -1,14 +1,13 @@
-const express = require("express");
+import express from "express";
+import { login, callback } from "../controllers/spotifyController.js";
+import SpotifyService from "../services/spotifyService.js";
+
 const router = express.Router();
-const SpotifyController = require("../controllers/spotifyController");
-const SpotifyService = require("../services/spotifyService");
-
 const spotifyService = new SpotifyService();
-const spotifyController = new SpotifyController(spotifyService);
 
-router.get("/login", spotifyController.login.bind(spotifyController));
-router.get("/callback", spotifyController.callback.bind(spotifyController));
-// Remove or comment out refresh_token route if not implemented
-// router.get('/refresh_token', spotifyController.refreshToken.bind(spotifyController));
+router.get("/login", (req, res) => login(req, res, spotifyService));
+router.get("/callback", (req, res) => callback(req, res, spotifyService));
+// If you implement refresh_token, add it here
+// router.get('/refresh_token', (req, res) => refreshToken(req, res, spotifyService));
 
-module.exports = router;
+export default router;

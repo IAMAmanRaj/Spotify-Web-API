@@ -1,6 +1,7 @@
 {
   "name": "spotify-backend",
   "version": "1.0.0",
+  "type":"module",
   "description": "A backend application for Spotify integration with OAuth login and token management.",
   "main": "src/app.js",
   "scripts": {

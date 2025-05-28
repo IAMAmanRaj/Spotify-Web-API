@@ -1,44 +1,38 @@
-class SpotifyService {
-  constructor() {
-    this.clientId = process.env.SPOTIFY_CLIENT_ID;
-    this.clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-    this.redirectUri = process.env.SPOTIFY_REDIRECT_URI;
-    this.token = null;
-  }
+export default function SpotifyService() {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+  let token = null;
 
-  async getAccessToken(code) {
+  this.getToken = async (code) => {
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization:
           "Basic " +
-          Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
-            "base64"
-          ),
+          Buffer.from(`${clientId}:${clientSecret}`).toString("base64"),
       },
       body: new URLSearchParams({
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: this.redirectUri,
+        redirect_uri: redirectUri,
       }),
     });
 
     const data = await response.json();
-    this.token = data.access_token;
+    token = data.access_token;
     return data;
-  }
+  };
 
-  async refreshAccessToken(refreshToken) {
+  this.refreshAccessToken = async (refreshToken) => {
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization:
           "Basic " +
-          Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
-            "base64"
-          ),
+          Buffer.from(`${clientId}:${clientSecret}`).toString("base64"),
       },
       body: new URLSearchParams({
         grant_type: "refresh_token",
@@ -47,20 +41,40 @@ class SpotifyService {
     });
 
     const data = await response.json();
-    this.token = data.access_token;
+    token = data.access_token;
     return data;
-  }
+  };
 
-  async fetchUserData() {
+  this.fetchUserData = async () => {
     const response = await fetch("https://api.spotify.com/v1/me", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     return await response.json();
-  }
-}
+  };
 
-module.exports = SpotifyService;
+  this.getAuthUrl = () => {
+    const params = new URLSearchParams({
+      client_id: clientId,
+      response_type: "code",
+      redirect_uri: redirectUri,
+      scope: [
+        "user-read-private",
+        "user-read-email",
+        "playlist-modify-public",
+        "playlist-modify-private",
+        "user-library-read",
+        "user-library-modify",
+        "user-top-read",
+        "user-read-playback-state",
+        "user-modify-playback-state",
+        "user-read-currently-playing",
+        "streaming",
+      ].join(" "),
+    });
+    return `https://accounts.spotify.com/authorize?${params.toString()}`;
+  };
+}

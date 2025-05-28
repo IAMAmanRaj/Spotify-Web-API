@@ -1,28 +1,30 @@
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const authRoutes = require("./routes/auth");
-const cors = require("cors");
+import express from "express";
+import session from "express-session";
+import passport from "passport";
+import authRoutes from "./routes/auth.js";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 if (process.env.VERCEL) {
-    // Trust proxy for secure cookies and redirects on Vercel
-    app.set('trust proxy', 1);
+  // Trust proxy for secure cookies and redirects on Vercel
+  app.set("trust proxy", 1);
 }
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'your_secret_key',
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your_secret_key",
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: process.env.VERCEL ? true : false,
-        sameSite: process.env.VERCEL ? 'none' : 'lax',
+      secure: process.env.VERCEL ? true : false,
+      sameSite: process.env.VERCEL ? "none" : "lax",
     },
-}));
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,9 +43,9 @@ app.get("/", (req, res) => {
 });
 
 if (!process.env.VERCEL) {
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
 }
 
-module.exports = app;
+export default app;
