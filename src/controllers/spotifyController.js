@@ -20,7 +20,7 @@ export async function callback(req, res) {
     } = tokenData;
 
     res.redirect(
-      `http://localhost:5173/home?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
+      `https://staging-irys.skdiv.com/home?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
     );
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve access token" });
