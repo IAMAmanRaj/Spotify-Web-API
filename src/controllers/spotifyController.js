@@ -1,13 +1,4 @@
-import {
-  fetchUserData,
-  getAuthUrl,
-  getToken,
-} from "../services/spotifyService.js";
-
-export async function login(req, res) {
-  const authUrl = getAuthUrl();
-  res.redirect(authUrl);
-}
+import { getToken, refreshAccessToken } from "../services/spotifyService.js";
 
 export async function callback(req, res) {
   const { code } = req.query;
@@ -27,12 +18,17 @@ export async function callback(req, res) {
   }
 }
 
-export async function getUserData(req, res, spotifyService) {
-  const { accessToken } = req.body;
+export async function refreshToken(req, res) {
+  const { refresh_token } = req.body;
+  if (!refresh_token) {
+    return res
+      .status(400)
+      .json({ error: "Missing refresh_token in request body" });
+  }
   try {
-    const userData = await fetchUserData(accessToken);
-    res.json(userData);
+    const tokenData = await refreshAccessToken(refresh_token);
+    res.json(tokenData);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch user data" });
+    res.status(500).json({ error: "Failed to refresh access token" });
   }
 }
