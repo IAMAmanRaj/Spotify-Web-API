@@ -8,31 +8,15 @@ import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-if (process.env.VERCEL) {
-  // Trust proxy for secure cookies and redirects on Vercel
-  app.set("trust proxy", 1);
-}
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your_secret_key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: process.env.VERCEL ? true : false,
-      sameSite: process.env.VERCEL ? "none" : "lax",
-    },
-  })
-);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://staging-irys.skdiv.com"],
     credentials: true,
   })
 );
