@@ -1,6 +1,7 @@
-# Spotify Integration Backend
+# Spotify OAuth Backend
 
-This backend application, built with Node.js and Express, enables secure integration with the Spotify API. It implements OAuth login and robust token management to allow users to authenticate and interact with their Spotify accounts—without ever exposing sensitive credentials to the frontend.
+A minimal Node.js and Express backend that securely handles Spotify OAuth token exchanges and refreshes.
+This service provides two endpoints for login and token refresh, enabling frontend applications to authenticate users and obtain access tokens for the Spotify Web API and Web Playback SDK—while keeping your Spotify client secret safe on the server.
 
 ## Project Structure
 
