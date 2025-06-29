@@ -1,7 +1,7 @@
 import { getToken, refreshAccessToken } from "../services/spotifyService.js";
 
 export async function callback(req, res) {
-  const { code } = req.query;
+  const { code, state } = req.query; // state will be the original route, e.g. "/home" or "/newSession"
   try {
     const tokenData = await getToken(code);
     const {
@@ -10,8 +10,11 @@ export async function callback(req, res) {
       expires_in: expiresIn,
     } = tokenData;
 
+    // Default to /home if state is not present or invalid
+    const redirectPath = state && (state === "/home" || state === "/newSession") ? state : "/home";
+
     res.redirect(
-      `https://staging-irys.skdiv.com/home?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
+      `https://staging-irys.skdiv.com${redirectPath}?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
     );
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve access token" });
