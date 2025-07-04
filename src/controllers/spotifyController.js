@@ -11,11 +11,10 @@ export async function callback(req, res) {
     } = tokenData;
 
     // Default to /home if state is not present or invalid
-    const redirectPath =
-      state && (state === "/home" || state === "/newSession") ? state : "/home";
+    const redirectPath = state && (state === "/home" || state === "/newSession") ? state : "/home";
 
     res.redirect(
-      `http://localhost:5173${redirectPath}?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
+      `https://staging-irys.skdiv.com${redirectPath}?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
     );
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve access token" });
