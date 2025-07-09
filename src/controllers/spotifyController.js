@@ -14,7 +14,7 @@ export async function callback(req, res) {
     const redirectPath = state && (state === "/home" || state === "/newSession") ? state : "/home";
 
     res.redirect(
-      `https://staging-irys.skdiv.com${redirectPath}?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
+      `https://irys.skdiv.com${redirectPath}?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`
     );
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve access token" });
